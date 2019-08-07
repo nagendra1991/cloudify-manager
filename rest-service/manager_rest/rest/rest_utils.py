@@ -26,6 +26,7 @@ from flask_security import current_user
 from flask import request, make_response, current_app
 from flask_restful.reqparse import Argument, RequestParser
 
+from cloudify.utils import string_types
 from cloudify.models_states import VisibilityState
 from cloudify.snapshots import SNAPSHOT_RESTORE_FLAG_FILE
 
@@ -89,7 +90,7 @@ def get_args_and_verify_arguments(arguments):
 def verify_and_convert_bool(attribute_name, str_bool):
     if isinstance(str_bool, bool):
         return str_bool
-    if isinstance(str_bool, basestring):
+    if isinstance(str_bool, string_types):
         if str_bool.lower() == 'true':
             return True
         if str_bool.lower() == 'false':

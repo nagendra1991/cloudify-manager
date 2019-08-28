@@ -77,7 +77,6 @@ class BaseTestEnvironment(object):
                 kwargs['enable_colors'] = True
             cfy = utils.get_cfy()
             cfy.init(**kwargs)
-            docl.init(resources=self.build_resource_mapping())
             self.on_environment_created()
         except BaseException as e:
             logger.error(e)
@@ -94,7 +93,10 @@ class BaseTestEnvironment(object):
 
     def run_manager(self, tag=None, label=None):
         logger.info('Starting manager container')
-        docl.run_manager(label=([self.env_label] + list(label or [])), tag=tag)
+        docl.run_manager(
+            label=([self.env_label] + list(label or [])),
+            tag=tag,
+            resources=self._build_resource_mapping())
         self.on_manager_created()
 
     def on_manager_created(self):
@@ -213,7 +215,7 @@ class AgentTestEnvironment(BaseTestEnvironment):
             json.dump({
                 # The dockercompute plugin needs to know where to find the
                 # docker host
-                'docker_host': docl.docker_host(),
+                # 'docker_host': docl.docker_host(),
 
                 # Used for cleanup purposes
                 'env_label': self.env_label

@@ -142,14 +142,18 @@ def init(expose=None, resources=None):
     _save_docl_config(conf)
 
 
-def run_manager(label=None, tag=None):
+def run_manager(label=None, tag=None, resources=None):
     start = time.time()
     label = label or []
-    args = ['--mount']
+    mount_target = os.environ.get('SOURCE_ROOT') or os.getcwd()
+    args = ['--mount', mount_target]
     if tag:
         args += ['--tag', tag]
     for l in label:
         args += ['--label', l]
+    for resource in resources:
+        args.append(
+            '--resource={0}:{1}'.format(resource['src'], resource['dst']))
     with tempfile.NamedTemporaryFile() as f:
         args += ['--details-path', f.name]
         _docl.run(*args)

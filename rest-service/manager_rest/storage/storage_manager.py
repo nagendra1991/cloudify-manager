@@ -24,7 +24,6 @@ from sqlalchemy import or_ as sql_or, func, inspect
 from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
-from cloudify.utils import string_types
 from cloudify.models_states import VisibilityState
 
 from manager_rest.storage.models_base import db
@@ -167,7 +166,7 @@ class SQLStorageManager(object):
     def _add_substr_filter(self, query, filters):
         for column, value in filters.items():
             column, value = self._update_case_insensitive(column, value, True)
-            if isinstance(value, string_types):
+            if isinstance(value, basestring):
                 query = query.filter(column.contains(value))
             else:
                 raise manager_exceptions.BadParametersError(
@@ -178,7 +177,7 @@ class SQLStorageManager(object):
     @staticmethod
     def _add_like_filter(query, filters):
         for column, value in filters.items():
-            if isinstance(value, string_types):
+            if isinstance(value, basestring):
                 query = query.filter(column.ilike(value))
             elif isinstance(value, (list, tuple)):
                 criteria = (column.ilike(expression)
@@ -194,7 +193,7 @@ class SQLStorageManager(object):
     @staticmethod
     def _add_notlike_filter(query, filters):
         for column, value in filters.items():
-            if isinstance(value, string_types):
+            if isinstance(value, basestring):
                 query = query.filter(column.notilike(value))
             elif isinstance(value, (list, tuple)):
                 criteria = (column.notilike(expression)

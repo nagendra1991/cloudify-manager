@@ -80,6 +80,12 @@ class Snapshot(CreatedAtMixin, SQLResourceBase):
 
 class Plugin(SQLResourceBase):
     __tablename__ = 'plugins'
+    __table_args__ = (
+        db.Index(
+            'package_name', 'package_version',
+            unique=True
+        ),
+    )
 
     archive_name = db.Column(db.Text, nullable=False, index=True)
     distribution = db.Column(db.Text)
